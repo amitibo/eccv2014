@@ -57,7 +57,7 @@ However, these imaging architectures suffer several drawbacks. They have crude r
 Creating and exploiting such a light-field imaging-network poses several requirements: low-cost units,
 communications, and {\em tailored computational photography algorithms}. The first two requirements are met  thanks to cellular-network infrastructure, cellular-based low-cost cameras and {\em cloud computing} services. Hence, we can deploy solar-powered cameras at will, nearly anywhere. By wireless, they upload their sky-images to the cloud, from which the light-field data can be analyzed. However, this new type of imaging-system gives rise to new problems and algorithms, part of which we deal with in this paper. In a sense, the network {\em generalizes some compute vision problems} that had been posed for monocular setups a decade ago. On the other hand, network redundancy offers {\em solutions} to these problems.
 
-The computational photography problems include radiometric self-calibration across a network of cameras, background estimation, and overcoming saturation and flare by a network. Consequently, the light-field network enables unprecedented 3D imaging of clouds, in high spatio-temporal resolution. This is achieved by {\em space carving} in a {\em volumetric distribution} of semi-transparent clouds. We demonstrate the approach using real field experiments.%, based on a network of five cameras. 
+The computational photography problems include radiometric self-calibration across a network of cameras, background estimation, and overcoming saturation and flare by a network. Consequently, the light-field network enables unprecedented 3D imaging of clouds, in high spatio-temporal resolution. This is achieved by {\em space carving} in a {\em volumetric distribution} of semi-transparent clouds. We demonstrate the approach using real field experiments.%, based on a network of five cameras.
 As a result, we believe this approach can complement multi-angular satellite cloud imagery, perhaps make aerosol tomography~\cite{Aides:13} realizable, and offer new capabilities to study weather phenomena and birds.
 
 
@@ -122,7 +122,7 @@ Similarly to Sec.~\ref{sec:Signelradio}, the solution relies on redundant measur
 \subsection{Geometric calibration}
 \label{sec:geometry}
 
-The cameras are independently deployed in the field. The location vector ${\bf l}_c$ 
+The cameras are independently deployed in the field. The location vector ${\bf l}_c$
 of each camera $c$ is known by GPS, and the internal parameters $\Psi_c$ are pre-calibrated in the lab. However, the orientation (yaw, pitch and roll angle vector ${\bf \Theta}_c$) is loosely set, as the camera is placed in the field. We calibrate the orientation by detecting and tracking extra-terrestrial (XT) objects (Sun and/or Moon)~\cite{Seiz2002,lalonde}, across day or night in the hemispherical field of view. Using astronomical charts per time $t$ and ${\bf l}_c$, an XT object is known to be at angle vector (zenith, azimuth) ${\bm \theta}^{\rm XT}(t)$ relative to a global coordinate system. Given camera orientation ${\bf \Theta}_c$, a ray from ${\bm \theta}^{\rm XT}(t)$ should project to pixel
 \begin{equation}
 {\bf x}^{\rm XT}_{\rm model}(t) = {\cal P}({\bm \theta}^{\rm XT}(t)|{\bf \Theta}_c,\Psi_c)
@@ -216,7 +216,7 @@ $\tilde I_t[{\bf l}_a,{\bm \theta}]$ vs.~$\tilde I_t[{\bf l}_{b},{\bm \theta}]$,
    \includegraphics[width=0.5\linewidth]{figures/bias1a.eps}
 \end{center}
    \vspace{-0.6cm}
-   \caption{[Top-Left] Splitting the field of view to upper/lower halves, to pixels corresponding 
+   \caption{[Top-Left] Splitting the field of view to upper/lower halves, to pixels corresponding
    respectively to either $\tilde I_t[{\bf l}_a,{\bm \theta}]$  or $\tilde I_t[{\bf l}_{b},{\bm \theta}]$. Radiometric inconsistency
    shows-up as a seam-line across which colors slightly change. [Bottom-Left] Scatter-plot of
    $\tilde I_t[{\bf l}_a,{\bm \theta}]$ vs.~$\tilde I_t[{\bf l}_{b},{\bm \theta}]$, $~\forall t,{\bm \theta}$, red-channel. [Bottom-right] The estimated offset map ${\hat o}_{b-a}({\bm \theta})$, red channel. It is derived based on a set of images taken during several hours.
@@ -233,7 +233,7 @@ To handle outliers, a temporal median was used
   {\rm median}_{t} \{\tilde I_t[{\bf l}_b,{\bm \theta}]-I_t[{\bf l}_a,{\bm \theta}]\}
  \label{eq:hato}
 \end{equation}
-The map ${\hat o}_{b-a}({\bm \theta})$ was then spatially smoothed and used to correct $\tilde I_t[{\bf l}_a,{\bm \theta}]$. As shown in Fig.~\ref{fig:calibration}, the results have much better inter-camera consistency. This is apparent in images taken throughout that day. A similar process was applied to other cameras, but they had negligible radiometric offsets with respect to camera $b$. 
+The map ${\hat o}_{b-a}({\bm \theta})$ was then spatially smoothed and used to correct $\tilde I_t[{\bf l}_a,{\bm \theta}]$. As shown in Fig.~\ref{fig:calibration}, the results have much better inter-camera consistency. This is apparent in images taken throughout that day. A similar process was applied to other cameras, but they had negligible radiometric offsets with respect to camera $b$.
 
 The process was then repeated to detect slight local variations of gain (vignetting). Suppose there is no offset. In analogy to Eq.~(\ref{eq:hato}), the gain in $b$ is higher than in $a$ by a factor
 \begin{equation}
@@ -304,20 +304,21 @@ What is the limitation of this approach? It would not have worked, had objects o
 \section{3D Clouds by a Camera Network}
 \label{sec:mutiradio}
 
-Network-based acquisition and the processes described above, yield a calibrated sampled light-field of the sky. Using this light-field, we can estimate the 3D cloud structure above the network domain. This is done by the following steps:~ %({\tt A})~Estimate the background;~
-({\tt A})~Per time $t$, give a {\rm cloud score} to each ray $[{\bf l}_c,{\bm \theta}]$, as we explain below.;~ ({\tt B})~Perform fuzzy version of space carving (reminiscent of back-projection in tomography).
+Network-based acquisition and the processes described above, yield a calibrated sampled light-field of the sky. Using this light-field, we can estimate the 3D cloud structure above the network domain, and beyond. This is done by the following steps:~ %({\tt A})~Estimate the background;~
+({\tt A})~Per time $t$, give a {\rm cloud score} to each ray $[{\bf l}_c,{\bm \theta}]$, as we explain below.;~ ({\tt B})~Perform a fuzzy version of space carving~\cite{Kutulakos2000} (reminiscent of back-projection in tomography).
 
 We first describe ({\tt B}).  The set of all sampled light-field rays is ${\cal R}$, where
-\mbox{$|{\cal R}|=N^{\rm rays}$}. A ray is indexed by $r$, and it corresponds to a specific $[{\bf l}_c,{\bm \theta}]$. Voxel $k$ projects to a subset of the rays $\rho_k\subset{\cal R}$. Suppose a ray
-$r\in{\cal R}$ has a cloud-score $s(r)\in[0,1]$, where $s=0$ means there is definitely not cloud on the ray, while $s=1$ means there is confidently a cloud there. Per voxel $k$, define a back-projected score \begin{equation}
+\mbox{$|{\cal R}|=N^{\rm rays}$}. A ray is indexed by $r$, and it corresponds to a specific $[{\bf l}_c,{\bm \theta}]$. Voxel $k$ projects to a subset of the rays $\rho_k\subset{\cal R}$.
+that reach $\nu_k$ viewpoints. Suppose a ray $r\in{\cal R}$ has a cloud-score $s(r)\in[0,1]$, where $s=0$ means there is definitely no cloud on the ray, while $s=1$ means there is confidently a cloud there. Per voxel $k$, define a back-projected score
+\begin{equation}
  B_k= \left[ \prod_{r\in\rho_k} s(r)\right]^{1/|\rho_k|}
- \;\; ~~{\rm if}~~ |\rho_k|\geq 2
+ \;\; ~~{\rm if}~~ \nu_k\geq 2
   \;.
  \label{eq:Bk}
 \end{equation}
 The back-projected score of voxel $k$ is null, if $k$ is not observed by at least two viewpoints. The back-projected score is null also if $s(r)=0$ for any $r\in\rho_k$. If all $r\in\rho_k$ have same score $s$, then $B_k=s$. The result of this operation is immediate carving-out of voxles that contradict  support for clouds.
 
-Different cloud regions have different gray shades. Ignoring these differences would wrongly allow matching of, say, a darker cloud-bottom to a bright sun-lit side of a cloud. To counter this, we require photometric consistent across viewpoints (the photo-hull concept in space-carving). Clouds are diffuse, cooperating with this requirement. Per per voxel $k$, the set of measured radiances is \mbox{${\cal I}_t(k)\equiv\{I_t(r)\}_{r\in\rho_k}$}. Across viewpoints, the measured variance of this set is ${\rm VAR}[{\cal I}_t(k)]$, per $t$. Define a photo-consistency score
+Different cloud regions have different gray shades. Ignoring these differences would wrongly allow matching of, say, a darker cloud-bottom to a bright sun-lit side of a cloud. To counter this, we require photometric consistency across viewpoints (the photo-hull concept in space-carving~\cite{Kutulakos2000}). Clouds are diffuse, cooperating with this requirement. Per per voxel $k$, the set of measured radiances is \mbox{${\cal I}_t(k)\equiv\{\hat I_t(r)\}_{r\in\rho_k}$}. Across viewpoints, the measured variance of this set is ${\rm VAR}[{\cal I}_t(k)]$, per $t$. Define a photo-consistency score
 \begin{equation}
  P_k= \exp\left(
          -\Sigma_{\rm color}\{{\rm VAR}[{\cal I}_t^{\rm color}(k)]\}/\sigma^2
@@ -334,8 +335,8 @@ The resulting 3D field $\{T_k\}_k$ is a volumetric estimate of cloud occupancy. 
 \label{sec:cloudscore}
 
 
-For a basic cloud score (step {\tt A}), there are various functions in the literature. We first considered several of them, including use of the adaptive background of Sec.~\ref{sec:background}. There is certainly room for increased sophistication, including sky modeling and machine learning. However,
-a ratio of image readout at the red/blue color channels, $\tilde I^{\rm red}/\tilde I^{\rm blue}$, is widely use in the literature~\cite{Yamashita2004,Seiz2002}. Overall, we found it to be an effective feature in broad daylight: clouds are grey (unit red-blue ratio), and the cloudless sky is significantly biased to blue
+For a basic cloud score (step {\tt A}), there are various functions in the literature. We considered several of them, including using the background derived in Sec.~\ref{sec:background}. There is certainly room for increased sophistication, including sky modeling and machine learning. However,
+a ratio of image readout at the red/blue color channels, $\tilde I^{\rm red}/\tilde I^{\rm blue}$, is widely use in the literature. Overall, we found it to be an effective feature in broad daylight: clouds are grey (unit red-blue ratio), and the cloudless sky is significantly biased to blue
 (below $\approx 0.8$ red-blue ratio). Thus, for demonstrations in this paper,
 the cloud-score we used per ray (pixel) is
 \begin{equation}
@@ -351,33 +352,37 @@ the cloud-score we used per ray (pixel) is
   \;.
  \label{eq:sr}
 \end{equation}
-Here $s\in[0,1]$, where either bounds achieved at gray clouds or blue sky. An example of applying this operator on an image is shown in Fig.~\ref{fig:photomotion}.
+Here $s\in[0,1]$, where either bound is achieved at gray clouds or blue sky, repectively. An example of applying this operator on an image is shown in Fig.~\ref{fig:photomotion}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Cloud Reconstruction Results}
 \label{sec:results}
 
-We applied the approach on various captured scenes. As an example, Fig.~\ref{fig:cu} shows sample frames of one scene, having cumulus clouds.
-\begin{figure}[t!]
-\begin{center}
-   \includegraphics[width=1\linewidth]{figures/projection.eps}
-\end{center}
-   \vspace{-0.6cm}
-   \caption{Cumulus clouds. Frames taken from multiple views, aligned and  shown in polar azimuthal equidistant projection.
-   }
-\label{fig:cu}
-\end{figure}
-Cross-sections of the recovered 3D cloud-occupancy field $\{\tilde T_k\}_k$ are shown in Fig.~\ref{fig:projection}. The lateral domain of the clouds is much larger than the camera network. 
+We applied the approach on various captured scenes. One scene had cumulus clouds, similar to those seen in Fig.~\ref{fig:photomotion}.
+%
+%
+%Fig.~\ref{fig:cu} shows sample frames of one scene, having cumulus clouds.
+%\begin{figure}[t!]
+%\begin{center}
+%   \includegraphics[width=1\linewidth]{figures/projection.eps}
+%\end{center}
+%   \vspace{-0.6cm}
+%   \caption{Cumulus clouds. Frames taken from multiple views, aligned and  shown in polar azimuthal equidistant projection.
+%   }
+%\label{fig:cu}
+%\end{figure}
+Cross-sections of the recovered 3D cloud-occupancy field $\{\tilde T_k\}_k$ are shown in Fig.~\ref{fig:projection}. The lateral domain of the clouds is much larger than the camera network.
 \begin{figure}[t!]
 \begin{center}
    \includegraphics[width=1\linewidth]{figures/clouds_reconstructions.eps}
 \end{center}
    \vspace{-0.6cm}
-   \caption{3D cloud recovery results. (a,b) Cross-sections of the recovered cloud-occupancy field $\{\tilde T_k\}_k$. Note how the domain of the clouds is much larger than the camera network. (c) Estimated sky-background image.  Based on four viewpoints (indexed $a,b,c,d$), the 3D volumetric cloud-occupancy field $\{\tilde T_k\}_k$ was derived. The field $\{\tilde T_k\}_k$ was projected to viewpoint $e$, and overlayed on the estimated sky-background image. The resulting synthetic cloud-score image $J[{\bf l}_e,{\bm \theta}]$ is shown in (d). This can be compared to the real captured image $\hat I_t[{\bf l}_e,{\bm \theta}]$, shown in (e).}
+   \caption{3D cumulus cloud recovery results. (a,b) Cross-sections of the recovered cloud-occupancy field $\{\tilde T_k\}_k$. Note how the domain of the clouds is much larger than the camera network. Cloud
+   altitude is above sea-level. (c) Estimated sky-background image.  Based on four viewpoints (indexed $a,b,c,d$), the 3D volumetric cloud-occupancy field $\{\tilde T_k\}_k$ was derived. The field $\{\tilde T_k\}_k$ was projected to viewpoint $e$, and overlayed on the estimated sky-background image. The resulting synthetic cloud-score image $J[{\bf l}_e,{\bm \theta}]$ is shown in (d). This can be compared to the real captured image $\hat I_t[{\bf l}_e,{\bm \theta}]$, shown in (e).}
 \label{fig:projection}
 \end{figure}
-The clouds mainly reside between 800m to 1450m above the network's origin, while the origin of our are network is 230m above sea-level. Hence, the cloud altitude is roughly in the range $[1030,1680]$m above sea-level. We used two indicators to validate the results. First, there are worldwide balloon-based radiosonde measurements including quantitative vertical humidity profiles. The radiosonde nearest to our network is 88km away, but on a similar coastal strip. It indicated a layer of high humidity that can yield clouds in the range $[770,1881]$m above sea-level.
+Accounting for the altitude of the cameras above sea-level, the clouds mainly reside between 800m to 1450m above Sea-level. We used two indicators to validate the results. First, there are worldwide balloon-based radiosonde measurements including quantitative vertical humidity profiles. The radiosonde nearest to our network is 88km away, but on a similar coastal strip. It indicated a layer of high humidity that can yield clouds in the range $[770,1881]$m above sea-level, consistent with our clouds.
 
 Second, we cross-validated 3D recovery. We used four cameras (indexed $a,b,c,d$) out of five, for 3D estimation. Camera $e$ was ignored. Then, we projected the estimated 3D cloud distribution into viewpoint $e$, and compared to the ground truth. The rendered image is as follows. {\em Ray casting}~\cite{Levoy1990} of  field $\{\tilde T_k\}_k$ is performed on a ray corresponding to
 $[{\bf l}_e,{\bm \theta}]$. Ray-casting aggregates $\{\tilde T_k\}_k$ on all voxels intersected by the ray. The result is a cloud-score image $w[{\bf l}_e,{\bm \theta}]$.
@@ -404,6 +409,23 @@ The rendered image is then
 This image does not pretend to properly render clouds in their true shades and effect on the sky. It simply served to visualize the result, as shown in Fig.~\ref{fig:projection}b. It can be compared to the true corresponding image $\hat I_t[{\bf l}_e,{\bm \theta}]$, in Fig.~\ref{fig:projection}c.
 
 This rendering relies on the redundancy of the network. Even if a viewpoint is blocked, much of its information can be derived using other viewpoints compounded with 3D recovery. This supports the proposed approach for static Sun-blocking (part of the sky missing from a view), described in Sec.~\ref{sec:mutiSun}.
+
+Another scene had a layer of alto-cumulus clouds. Figure~\ref{fig:alto} shows sample frames from this scene, and cross-sections of the recovered 3D cloud-occupancy field $\{\tilde T_k\}_k$.
+\begin{figure}[t!]
+\begin{center}
+   \includegraphics[width=1\linewidth]{figures/alto.eps}
+\end{center}
+   \vspace{-0.6cm}
+   \caption{3D altocumulus cloud recovery results. (a,b) Sample frames.  
+   (c,d)  Cross-sections of the recovered cloud-occupancy field $\{\tilde T_k\}_k$. Cloud
+   altitude is above sea-level.}
+\label{fig:alto}
+\end{figure}
+Accounting for the altitude of the cameras above sea-level, these estimated clouds mainly reside on a horizontal layer 3450m above sea-level, and the layer is about a kilometer thick. This time, the radiosonde readout indicated a layer of high humidity that can yield clouds in height range $[3072,4180]$m above sea-level. This is in strong agreement with our results.
+
+
+
+
 
 %The pose can be self-calibrated using multiview geometry, particularly {\em structure from motion} (SfM), which has been extensively developed~\cite{birkbeck,cremers,matousek,pollefeys,ruf,woodford} by the computer vision community. A preliminary result is shown in Fig.~\ref{fig:clouds2}, obtained by the Israeli group.
 %
