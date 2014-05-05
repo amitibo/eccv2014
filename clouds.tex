@@ -113,9 +113,9 @@ that are too sparse to be integrated for recovery.} are few, relying on high qua
 \section{Self-Calibration in a Camera Network}
 \label{sec:muticalib}
 
-Even in high grade equipment, there are generally radiometric inconsistencies between cameras. Hence, the same distant object has slightly different intensity readouts for different cameras. This problem is exacerbated in low-cost cameras, which have somewhat loose quality control. A large light-field network would need to use many such cameras. Estimating and compensating for inter-camera differences is helpful for subsequent computer vision algorithms. It is clear that radiometric consistency would be necessary for radiometric-based tasks, such as tomography~\cite{Aides:13}. However, it also assists non-radiometric, higher level tasks. For example, consider cloud segmentation. Segmentation (which may rely on image-value thresholds) has to be as consistent as possible across different viewpoints, otherwise contradictions may arise. 
+Even in high grade equipment, there are generally radiometric inconsistencies between cameras. Hence, the same distant object has slightly different intensity readouts for different cameras. This problem is exacerbated in low-cost cameras, which have somewhat loose quality control. A large light-field network would need to use many such cameras. Estimating and compensating for inter-camera differences is helpful for subsequent computer vision algorithms. It is clear that radiometric consistency would be necessary for radiometric-based tasks, such as tomography~\cite{Aides:13}. However, it also assists non-radiometric, higher level tasks. For example, consider cloud segmentation. Segmentation (which may rely on image-value thresholds) has to be as consistent as possible across different viewpoints, otherwise contradictions may arise.
 
-Similarly to Sec.~\ref{sec:Signelradio}, the solution relies on redundant measurement at {\em corresponding} points.   For correspondence, geometric calibration~\cite{Seiz2002} is a first necessity, which is treated in Sec.~\ref{sec:geometry}. 
+Similarly to Sec.~\ref{sec:Signelradio}, the solution relies on redundant measurement at {\em corresponding} points.   For correspondence, geometric calibration~\cite{Seiz2002} is a first necessity, which is treated in Sec.~\ref{sec:geometry}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Geometric calibration}
@@ -163,7 +163,7 @@ $\tilde I_t[{\bf l}_c,{\bm \theta}(\bf x)]$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Some Details About The Experimental Setup}
-\label{sec:muticalib}
+\label{sec:set}
 
 Before proceeding with mathematical problems and solutions, we now describe  a small experimental network, which we built to test the hypotheses of this paper.  To show that it can work with very low-cost  camera nodes (units), each of the 5 units was built from basic components, and coarse alignment tolerances. Its core is a Raspberry-Pi computer used in DIY electronics, and a 5MP Raspberry-Pi camera. In this camera, the gain, response and white-balance can be fixed, avoiding temporal radiometric variations. We cut-off its OEM lens, and manually mounted a small fisheye lens. Due to this coarse lens-to-chip alignment, {\em each camera has a different peripheral dead-region}, creating a missing part in the hemispheric view-field and vignetting distinct to each camera. As derived below, a {\em {\bf network} as-a-whole can {\bf inherently overcome}} these issues. Every 30 seconds, synchronously, all units automatically transmit image data using the cellular network to the internet (cloud-service). Each unit is solar powered (Figs.~\ref{fig:system},\ref{fig:photomotion}).
 \begin{figure}[t!]
@@ -180,7 +180,7 @@ Before proceeding with mathematical problems and solutions, we now describe  a s
 \begin{center}
    \includegraphics[width=1\linewidth]{figures/scene_d.eps}
 \end{center}
-   \vspace{-0.6cm}
+   \vspace{-1.2cm}
    \caption{Images taken simultaneously by a 5-node network. They are geometrically aligned to the zenith and north, and resampled to {\em polar azimuthal equidistant} projection in this global system. Equidistant zenith angle circles are overlayed on $\tilde I_t[{\bf l}_e,{\bm \theta}]$ (camera $e$). Each camera has dead-regions, since the lens-axis had only been roughly centered on the tiny DIY boards.
    Corresponding to the frame in camera $e$, a {\em cloud score} map (Eq.~\ref{eq:sr}) has high values in cloud-pixels, diminishing outside them. [Bottom-right] The 3D setup of the experimental network. It is laterally spread over several hundreds of meters, on rooftops at somewhat different heights.}
 \label{fig:photomotion}
@@ -237,7 +237,7 @@ The process was then repeated to detect slight local variations of gain (vignett
 \begin{equation}
  {\hat M}_{b/a}({\bm \theta})=
   {\rm median}_{t} \{\tilde I_t[{\bf l}_b,{\bm \theta}]/I_t[{\bf l}_a,{\bm \theta}]\}
- \label{eq:hato}
+ \label{eq:hatm}
 \end{equation}
 After radiometric corrections, the light-field samples are denoted tilde $\hat I_t[{\bf l}_b,{\bm \theta}]$.
 
@@ -300,7 +300,7 @@ What is the limitation of this approach? It would not have worked, had objects o
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{3D Clouds by a Camera Network}
-\label{sec:mutiradio}
+\label{sec:3Dc}
 
 Network-based acquisition and the processes described above, yield a calibrated sampled light-field of the sky. Using this light-field, we can estimate the 3D cloud structure above the network domain, and beyond. This is done by the following steps:~ %({\tt A})~Estimate the background;~
 ({\tt A})~Per time $t$, give a {\rm cloud score} to each ray $[{\bf l}_c,{\bm \theta}]$, as we explain below.~({\tt B})~Perform a fuzzy version of space carving~\cite{Kutulakos2000} (reminiscent of back-projection in tomography).
@@ -414,7 +414,7 @@ Another scene had a layer of alto-cumulus clouds. Figure~\ref{fig:alto} shows sa
    \includegraphics[width=1\linewidth]{figures/altos.eps}
 \end{center}
    \vspace{-0.6cm}
-   \caption{3D altocumulus cloud recovery results. (a,b) Sample frames.  
+   \caption{3D altocumulus cloud recovery results. (a,b) Sample frames.
    (c,d)  Cross-sections of the recovered cloud-occupancy field $\{\tilde T_k\}_k$. Cloud
    altitude is above sea-level.}
 \label{fig:alto}
